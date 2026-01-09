@@ -1,7 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 
-const DATA_FILE_PATH = path.join(process.cwd(), 'data.json');
+// Determine if we are in a production environment (Vercel)
+const isProduction = process.env.NODE_ENV === 'production';
+
+// On Vercel, only /tmp is writable. 
+// Locally, we use the project root.
+const DATA_FILE_PATH = isProduction
+    ? path.join('/tmp', 'data.json')
+    : path.join(process.cwd(), 'data.json');
 
 export interface Product {
     id: string;
@@ -17,21 +24,33 @@ export interface DataSchema {
     products: Product[];
 }
 
+// Initial seed data to populate if file is missing
+const SEED_DATA: Product[] = [
+    {
+        "id": "seed-1",
+        "name": "Neon Genesis Hoodie",
+        "description": "Premium cotton blend with holographic prints.",
+        "price": 89.99,
+        "image": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=2070",
+        "category": "Apparel",
+        "createdAt": "2024-01-01T00:00:00.000Z"
+    }
+];
+
 // Helper to read data
 export const getProducts = async (): Promise<Product[]> => {
-    // In a real app, this would be a DB call.
-    // We use fs.promises for async file reading to simulate DB latency if needed.
     try {
         if (!fs.existsSync(DATA_FILE_PATH)) {
-            // Initialize if not exists
-            await saveProducts([]);
-            return [];
+            // If file doesn't exist, create it with seed data
+            await saveProducts(SEED_DATA);
+            return SEED_DATA;
         }
         const fileContent = await fs.promises.readFile(DATA_FILE_PATH, 'utf-8');
         const data = JSON.parse(fileContent) as DataSchema;
         return data.products || [];
     } catch (error) {
         console.error("Failed to read products", error);
+        // Fallback to empty to prevent crash
         return [];
     }
 };
