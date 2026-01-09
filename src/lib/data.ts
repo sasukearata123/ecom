@@ -36,6 +36,11 @@ export const getProducts = async (): Promise<Product[]> => {
     }
 };
 
+export const getProductById = async (id: string): Promise<Product | undefined> => {
+    const products = await getProducts();
+    return products.find(p => p.id === id);
+};
+
 // Helper to write data
 export const saveProducts = async (products: Product[]): Promise<void> => {
     const data: DataSchema = { products };
