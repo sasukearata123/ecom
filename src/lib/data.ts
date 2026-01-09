@@ -18,7 +18,7 @@ export const getProducts = async (): Promise<Product[]> => {
         });
 
         // Convert Date to string for frontend compatibility
-        return products.map(p => ({
+        return products.map((p: any) => ({
             ...p,
             createdAt: p.createdAt.toISOString()
         }));
