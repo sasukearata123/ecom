@@ -11,11 +11,11 @@ export default function Navbar() {
     return (
         <nav className={`${styles.navbar} glass`}>
             <Link href="/" className={styles.logo}>
-                NEXUS
+                Wall of Lifestyle
             </Link>
             <div className={styles.navLinks}>
                 <Link href="/" className={styles.link}>Store</Link>
-                <Link href="/admin" className={styles.link}>Admin Dashboard</Link>
+                <Link href="/admin" className={styles.link}>Admin</Link>
                 <button
                     onClick={toggleCart}
                     className={styles.link}

@@ -59,3 +59,10 @@ export const addProduct = async (product: Omit<Product, 'id' | 'createdAt'>): Pr
     await saveProducts(products);
     return newProduct;
 };
+
+// Helper to delete a product
+export const deleteProduct = async (id: string): Promise<void> => {
+    const products = await getProducts();
+    const filtered = products.filter(p => p.id !== id);
+    await saveProducts(filtered);
+};

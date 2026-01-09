@@ -10,15 +10,6 @@
       "createdAt": "2024-01-01T00:00:00.000Z"
     },
     {
-      "id": "seed-2",
-      "name": "Cyberpunk Visor",
-      "description": "HUD display enabled styling accessory.",
-      "price": 149.5,
-      "image": "https://images.unsplash.com/photo-1572569028738-411a5611f074?auto=format&fit=crop&q=80&w=2000",
-      "category": "Accessories",
-      "createdAt": "2024-01-02T00:00:00.000Z"
-    },
-    {
       "name": "lamp",
       "description": "exquisite lamp",
       "price": 12,

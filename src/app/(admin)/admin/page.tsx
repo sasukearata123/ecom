@@ -23,6 +23,7 @@ export default function AdminPage() {
         image: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
 
     useEffect(() => {
         fetchProducts();
@@ -37,6 +38,23 @@ export default function AdminPage() {
             console.error('Failed to fetch products', error);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this product?')) return;
+        setDeletingId(id);
+        try {
+            const res = await fetch(`/api/products?id=${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                fetchProducts();
+            } else {
+                alert('Failed to delete');
+            }
+        } catch (e) {
+            alert('Error deleting product');
+        } finally {
+            setDeletingId(null);
         }
     };
 
@@ -75,7 +93,7 @@ export default function AdminPage() {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <h1 className={styles.title}>Admin Dashboard</h1>
+                <h1 className={styles.title}>Wall of Lifestyle Admin</h1>
             </header>
 
             <div className={styles.grid}>
@@ -163,12 +181,28 @@ export default function AdminPage() {
                         <div className={styles.productList}>
                             {products.map(product => (
                                 <div key={product.id} className={styles.productItem}>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img src={product.image} alt={product.name} className={styles.productImage} />
                                     <div className={styles.productInfo}>
                                         <div style={{ fontWeight: '600' }}>{product.name}</div>
                                         <div style={{ fontSize: '0.8rem', opacity: 0.6 }}>{product.category}</div>
                                     </div>
                                     <div className={styles.productPrice}>${product.price}</div>
+                                    <button
+                                        onClick={() => handleDelete(product.id)}
+                                        disabled={deletingId === product.id}
+                                        style={{
+                                            background: '#ef4444',
+                                            color: 'white',
+                                            border: 'none',
+                                            padding: '0.5rem',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            marginLeft: '1rem'
+                                        }}
+                                    >
+                                        {deletingId === product.id ? '...' : '×'}
+                                    </button>
                                 </div>
                             ))}
                             {products.length === 0 && <p style={{ opacity: 0.5 }}>No products yet.</p>}
